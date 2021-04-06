@@ -143,11 +143,12 @@ jobs:
           command: |
             VERSION="v${CIRCLE_PREVIOUS_BUILD_NUM}"
             pip3 install --upgrade awsebcli
+            pwd
             DB_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/postgres_dev:${VERSION}"
             UI_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ui_dev:${VERSION}"
             API_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/api_dev:${VERSION}"
-            sed -i'' -e "s;%DB_IMAGE%;$DB_IMAGE;g" ./.deploy/Dockerrun.aws.json
-            sed -i'' -e "s;%UI_IMAGE%;$UI_IMAGE;g" ./.deploy/Dockerrun.aws.json
-            sed -i'' -e "s;%API_IMAGE%;$API_IMAGE;g" ./.deploy/Dockerrun.aws.json
+            sed -i'' -e "s;%DB_IMAGE%;$DB_IMAGE;" Dockerrun.aws.json
+            sed -i'' -e "s;%UI_IMAGE%;$UI_IMAGE;" Dockerrun.aws.json
+            sed -i'' -e "s;%API_IMAGE%;$API_IMAGE;" Dockerrun.aws.json
             ls -ltr
             eb deploy --debug
