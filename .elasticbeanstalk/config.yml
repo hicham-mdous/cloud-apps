@@ -1,5 +1,5 @@
 branch-defaults:
-  feature/multicontainer_deployment:
+  feature/optimize_ci_cd:
     environment: cloud-apps-dev
     group_suffix: null
 global:
