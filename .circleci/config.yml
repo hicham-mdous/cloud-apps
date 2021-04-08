@@ -111,7 +111,7 @@ jobs:
   push_image_to_ecr:
     working_directory: ~/repository
     docker:
-      - image: cimg/python:3.9.2
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout
       - setup_remote_docker:
