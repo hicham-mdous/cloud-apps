@@ -132,9 +132,9 @@ jobs:
             DB_IMAGE="${FULL_IMAGE_NAME}/postgres_dev:${VERSION}"
             UI_IMAGE="${FULL_IMAGE_NAME}/ui_dev:${VERSION}"
             API_IMAGE="${FULL_IMAGE_NAME}/api_dev:${VERSION}"
-            sed -i'' "s;%DB_IMAGE%;$DB_IMAGE;" Dockerrun.aws.json
-            sed -i'' "s;%UI_IMAGE%;$UI_IMAGE;" Dockerrun.aws.json
-            sed -i'' "s;%API_IMAGE%;$API_IMAGE;" Dockerrun.aws.json
+            sed -i'' "s#<DB_IMAGE>#$DB_IMAGE#" Dockerrun.aws.json
+            sed -i'' "s#<UI_IMAGE>#$UI_IMAGE#" Dockerrun.aws.json
+            sed -i'' "s#<API_IMAGE>#$API_IMAGE#" Dockerrun.aws.json
       - persist_to_workspace:
           root: .
           paths:
@@ -152,4 +152,4 @@ jobs:
             pip3 install --upgrade awsebcli
             ls -ltr 
             cat Dockerrun.aws.json
-            eb deploy
+            eb deploy --debug
