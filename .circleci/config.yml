@@ -141,7 +141,7 @@ jobs:
       - image: cimg/python:3.9.2
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
           name: Deploy to Elastic Beanstalk
           command: |
