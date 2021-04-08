@@ -111,7 +111,7 @@ jobs:
   push_image_to_ecr:
     working_directory: ~/repository
     docker:
-      - image: circleci/python:2.7
+      - image: cimg/python:3.9.2
     steps:
       - checkout
       - setup_remote_docker:
