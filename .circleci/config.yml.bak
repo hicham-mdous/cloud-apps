@@ -114,6 +114,8 @@ jobs:
       - image: circleci/python:2.7
     steps:
       - checkout
+      - setup_remote_docker:
+          veraion: 19.03.13
       - run:
           name: Install dependencies
           command: |
@@ -128,24 +130,25 @@ jobs:
             VERSION="v${CIRCLE_BUILD_NUM}"
             FULL_IMAGE_NAME=${FULL_IMAGE_NAME} VERSION=${VERSION} docker-compose -f uat.yaml build
             FULL_IMAGE_NAME=${FULL_IMAGE_NAME} VERSION=${VERSION} docker-compose -f uat.yaml push
-            sed -i'' "s;%DB_IMAGE%;$DB_IMAGE;" Dockerrun.aws.json
-            sed -i'' "s;%UI_IMAGE%;$UI_IMAGE;" Dockerrun.aws.json
-            sed -i'' "s;%API_IMAGE%;$API_IMAGE;" Dockerrun.aws.json
-      - persist_to_workspace:
-          root: .
-          paths:
-                - .
   deploy_to_ebs:
     working_directory: ~/repository
     docker:
       - image: cimg/python:3.9.2
     steps:
-      - attach_workspace:
-        at: .
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
       - run:
           name: Deploy to Elastic Beanstalk
           command: |
+            VERSION="v${CIRCLE_PREVIOUS_BUILD_NUM}"
             pip3 install --upgrade awsebcli
-            ls -ltr 
-            cat Dockerrun.aws.json
-            eb deploy
+            pwd
+            DB_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/postgres_dev:${VERSION}"
+            UI_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/ui_dev:${VERSION}"
+            API_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/api_dev:${VERSION}"
+            sed -i'' "s;%DB_IMAGE%;$DB_IMAGE;" Dockerrun.aws.json
+            sed -i'' "s;%UI_IMAGE%;$UI_IMAGE;" Dockerrun.aws.json
+            sed -i'' "s;%API_IMAGE%;$API_IMAGE;" Dockerrun.aws.json
+            ls -ltr
+            eb deploy --debug
