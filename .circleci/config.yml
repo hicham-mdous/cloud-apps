@@ -12,20 +12,22 @@ workflows:
             - ui-unit-tests
           filters:
             branches:
-              only: master
+              only: develop
       - push_image_to_ecr:
+          context: MYP2
           requires:
             - api-integration-tests
             - ui-e2e-tests
           filters:
             branches:
-              only: master
+              only: develop
       - deploy_to_ebs:
+          context: MYP2
           requires:
             - push_image_to_ecr
           filters:
             branches:
-              only: master
+              only: develop
 
 jobs:
   ui-unit-tests:
@@ -141,9 +143,6 @@ jobs:
           root: .
           paths:
                 - .
-    filters:
-      tags:
-        only: /^v.*/
   deploy_to_ebs:
     working_directory: ~/repository
     docker:
